@@ -1,6 +1,4 @@
 <?php
-
-// Return NaN if x or y is missing
 if (!isset($_GET['x']) || !isset($_GET['y'])) {
     echo "NaN";
     exit;
@@ -9,13 +7,16 @@ if (!isset($_GET['x']) || !isset($_GET['y'])) {
 $x = $_GET['x'];
 $y = $_GET['y'];
 
-// Validate natural numbers (non-negative integers)
 if (!preg_match('/^\d+$/', $x) || !preg_match('/^\d+$/', $y)) {
     echo "NaN";
     exit;
 }
 
-// Use BCMath (handles unlimited big integers)
+if ($x === "0" || $y === "0") {
+    echo "0";
+    exit;
+}
+
 function gcd($a, $b) {
     while (bccomp($b, '0') !== 0) {
         $tmp = $b;
@@ -25,13 +26,8 @@ function gcd($a, $b) {
     return $a;
 }
 
-$x = (string)$x;
-$y = (string)$y;
-
 $g = gcd($x, $y);
-
-// LCM = (x / gcd) * y
 $lcm = bcmul(bcdiv($x, $g), $y);
 
+// Output only digits, no newline
 echo $lcm;
-
